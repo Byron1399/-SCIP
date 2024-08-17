@@ -1,0 +1,24 @@
+#lang sicp
+(define (just a) a)
+(define (inc a )(+ a 1))
+(define(p1 term a b)
+  (product1 term a inc b))
+(define (product1 term a next b)
+  (define (iter a result)
+  (if (> a b)
+       result
+      (iter(next a) (* result (term a)))))
+  (iter a 1))
+
+
+(define(p2 term a b)
+  (product2 term a inc b))
+(define (product2 term a next b)
+  (define (iter a)
+  (if (> a b)
+       1
+      (* (term a) (iter (next a)))))
+  (iter a))
+ 
+  
+  

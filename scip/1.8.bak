@@ -1,0 +1,16 @@
+#lang scheme
+(define (panduan guess x)
+  (if(guess enough? guess x)
+     guess
+     (panduan (improve guess x) x)))
+(define (f a b)
+  (if (> a b) (a/b-1) (b/a-1)))
+(define (sqr x) (* x x))
+(define (guess enough? guess x)
+  (if (< (f guess (/(+(* 2 y)
+                      (/ x sqr(guess)))
+                    3)) 0.01) 1 0))
+(define (improve guess x)
+  (define guess (/(+(* 2 y)
+                      (/ x sqr(guess)))
+                    3)))

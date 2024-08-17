@@ -1,0 +1,94 @@
+#lang sicp
+(define (square n) (* n n))
+(define (average v1 v2) (/ (+ v1 v2)
+                           2))
+(define (repeated-digui f n)
+  (if (= n 1)
+      f
+     (lambda (x)(f((repeated-digui f (- n 1)) x)))))
+
+((repeated-digui square 2) 5)
+
+(define (repeated-diedai f n)
+  (define (iter n next)
+    (if (= n 1)
+        next
+      (iter (- n 1) (lambda (x) (f (next x))))))
+  (iter n f))
+((repeated-diedai square 2) 5)
+
+(define (compose f g)
+  (lambda (x) (f (g x))))
+(define (repeated-digui-compose f n)
+  (if (= n 1)
+      f
+      (compose f (repeated-digui-compose f (- n 1)))))
+((repeated-digui-compose square 2) 5)
+(define (repeated-diedai-compose f n)
+  (define ( iter n next)
+    (if(= n 1)
+       next
+       (iter (- n 1) (compose next next))))
+  (iter n f))
+((repeated-diedai-compose square 2) 5)
+
+
+
+(define dx 0.001)
+(define (smooth f)
+  (lambda (x) (/ (+ (f(+ x dx))
+                    (f x)
+                    (f(- x dx)))
+                 3)))
+(define(smooth-iter f n)
+  (lambda(x) (((repeated-digui smooth n) f) x)))
+
+
+  
+(((repeated-digui smooth 2) square) 5)
+(define wucha 0.001)
+(define (fixed-point f x)
+  
+  (define (enough? v1 v2)
+    (< (abs(- v1 v2)) wucha))
+   (define (iter guess)
+     (let ( ( next (f guess)))
+      (if (enough? guess next)
+          next
+          (iter next))))
+    (iter x))
+(define (average-damp f)
+  (lambda (x) (average x (f x))))
+
+
+
+(define (squart n  x )
+  (define (lg n )
+    (cond ((> (/ n 2) 1) (+ 1 (lg(/ n 2))))
+          ((< (/ n 2) 1) 0)
+          (else 1)))
+  (define (f n y)
+    (if (= n 1) 1
+        (* y (f (- n 1) y))))
+  
+  (fixed-point ((repeated-digui average-damp (lg n)) (lambda (y) (/ x (f n y)))) 1.0))
+
+(define (iterative-improve good? f)
+   (lambda (guess)
+     (define (try n)
+       (let( ( next (f guess)))
+         (if (good? guess next)
+             next
+             (try  next))))
+     (try guess)))
+     
+(define (sqrt x)
+  (define (f guess)
+    (average  x (/ x guess)))
+  (define (good? v1 v2)
+    (< (abs(- v1 v2)) wucha))
+  ((iterative-improve good? f)1.0))
+(sqrt 4)
+
+
+    

@@ -1,0 +1,16 @@
+#lang sicp
+(define (cube x) ( * x x x))
+(define count 0)
+(define (integral cube a b n)
+  
+  (define (sum term a next b )
+    (set! count (+ count 1))
+  (if (> a b)
+      0
+      (cond((or (= count 1) (= count (+ n 1))) (+ (term a) (sum term (next a) next b)))
+           ((= (remainder count 2) 0) (+ (* 4 (term a)) (sum term (next a) next b)))
+           (else (+ (* 2 (term a)) (sum term (next a) next b))))))
+                   
+  (define h (/ (- b a ) n))
+  (define (add x)(+ x h))
+  (* (sum cube (exact->inexact a) add b ) (/ h 3)))

@@ -1,0 +1,78 @@
+#lang sicp
+;2.33
+(define (square n) (* n n))
+
+(define (accumulate op result  sequence)
+  (if (null? sequence)
+      result
+      (op (car sequence)
+          (accumulate op result (cdr sequence)))))
+
+(define (map p sequence)
+  (accumulate (lambda (x y) (cons (p x) y)) nil sequence))
+
+(define (append seq1 seq2)
+  (accumulate cons seq2 seq1))
+
+(define (length sequence)
+  (accumulate (lambda (x y) (+ 1 y) 0 sequence)))
+
+;2.34
+(define (horner-eval x coefficient-sequence)
+  (accumulate (lambda (this-coeff higher-terms) (+ (* 1 this-coeff) (* x higher-terms)))  0 coefficient-sequence))
+(horner-eval 2 (list 1 3 0 5 0 1))
+
+;2.35
+(define (count-leaves t)
+  (accumulate (lambda (x y) (+ 1 y)) 0 (map pair? t)))
+(define t1 (list (list 1 2) 3 4))
+(count-leaves t1)
+
+;2.36
+
+(define (accumulate-n op init seqs)
+    (if (null?  (car seqs))
+        '()
+        (cons (accumulate op init (map car seqs))
+              (accumulate-n op init (map cdr seqs)))))
+(define seqs1 (list (list 1 2 3) (list 4 5 6) (list 7 8 9) (list 10 11 12)))
+(accumulate-n + 0 seqs1)
+
+
+;2.37
+
+(define (dot-product v w)
+  (accumulate + 0 (map * v w)))
+
+(define (matrix-*-vector m v)
+  (map (lambda ( x y) (cons (dot-product x v) y)) m))
+
+(define (transpose mat)
+  (accumulate-n cons nil mat))
+
+(define (matrix-*-matrix m n)
+  (let ( (clos (transpose n)))
+    (map (lambda (clo-m)
+           (map (lambda (clo-clos)
+                  (dot-product clo-clos  clo-m))
+                clos))
+         m)))
+
+
+(define (matrix-*-matrix m n)
+  (let ( (clos (transpose n)))
+    (map (lambda (clo-m) (matrix-*-vector n clo-m)) m))) 
+;2.39
+
+
+(define (reverse1 sequence)
+  (fold-right (lambda (x y) (cons y x) nil sequence)))
+
+(define (reverse2 sequence)
+  (fold-left (lambda (x y) (cons y x) nil sequence)))
+
+
+
+
+
+

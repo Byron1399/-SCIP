@@ -1,0 +1,27 @@
+#lang sicp
+(define (f x1 y1 x2 y2)
+  (define a (cons x1 y1))
+  (define b (cons x2 y2))
+  (define (make-segment a b) (cons a b))
+  (make-segment a b))
+(define (x-point a) (car a))
+(define (y-point a)(cdr a))
+(define (print-point p)
+  (newline)
+  (display"(")
+  (display (x-point p))
+  (display",")
+  (display (y-point p))
+  (display")"))
+(define (midpoint-segment a)
+  (define midpoint (cons (/ (+ (car (car a))
+                               (car(cdr a)))
+                            2)
+                         (/ (+ (cdr (car a))
+                               (cdr (cdr a)))
+                            2)))
+  (print-point midpoint))
+(define (f x1 y1 x2 y2 x3 y3 x4 y4)
+  
+
+  

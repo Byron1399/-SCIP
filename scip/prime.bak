@@ -1,0 +1,36 @@
+#lang scheme
+(define (runtime) (current-milliseconds))
+(define (squre testnum) (* testnum testnum)) 
+(define (smallest-div n)
+  (define (smallest-div-iter n testnum)
+  (cond((> (squre testnum) n) n)
+       ((= (remainder n testnum) 0) testnum)
+       ((= testnum 2) (smallest-div-iter n (+ testnum 1)))
+       (else(smallest-div-iter n (+ testnum 2)))))
+  (smallest-div-iter n 2))
+(define (prime? n)
+  (= (smallest-div n) n))
+
+(define(search-for-primes n c)
+  (define (time-prime-test x)
+    (newline)
+    (display x)
+    (start-prime-test x (runtime)))
+
+
+  (define (start-prime-test x start-time)
+    (if (prime? x)
+        ((- c 1)(report-prime(-(runtime) start-time)))
+        (search-for-primes-iter (+ 1 x) c)))
+
+
+
+  (define (report-prime time)
+    (display"***")
+    (display time))
+  (define (search-for-primes-iter x count)
+    (cond(= 0 c) (display "over")
+         (else (time-prime-test x))))
+
+    (search-for-primes-iter (+ n 1) c))
+(search-for-primes 100 3)
